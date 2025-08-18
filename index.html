@@ -522,7 +522,6 @@ let rating = movie.rating ? `${movie.rating}` : "N/A";
 
 const torrentsAll = Array.isArray(movie.torrents) ? movie.torrents : [];
 
-// фильтруем только "живые" (с сидерами), исключаем 4K/3D
 let filtered = torrentsAll.filter(t =>
   t &&
   typeof t.hash === "string" &&
@@ -532,16 +531,13 @@ let filtered = torrentsAll.filter(t =>
 
 let bestTorrent = null;
 
-// сначала ищем 1080p с макс. сидов
 let torrents1080 = filtered.filter(t => /1080p/i.test(t.quality));
 if (torrents1080.length > 0) {
   bestTorrent = torrents1080.sort((a, b) => (b.seeds || 0) - (a.seeds || 0))[0];
 } else if (filtered.length > 0) {
-  // если 1080p нет — берём любой с макс. сидов
   bestTorrent = filtered.sort((a, b) => (b.seeds || 0) - (a.seeds || 0))[0];
 }
 
-// если вдруг ничего не нашли — null
 console.log("bestTorrent:", bestTorrent);
 
 let screenshot = movie.large_screenshot_image2 

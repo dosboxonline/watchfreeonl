@@ -701,25 +701,21 @@ addMetaTag("twitter:description", movieDescription);
 addMetaTag("twitter:image", movieImage);
 addMetaTag("twitter:url", movieUrl);
 
-// --- строго после успешного ЗАВЕРШЕНИЯ запроса к YTS ---
-// готовим данные для плеера, но НЕ запускаем его раньше времени
 if (bestTorrent && bestTorrent.hash) {
     const hash = String(bestTorrent.hash).toLowerCase().trim();
     pendingMagnet = `magnet:?xt=urn:btih:${hash}`;
     pendingPoster = screenshot || null;
 } else {
     showError();
-    return; // выходим, плеер не трогаем
+    return;
 }
 
-// помечаем, что API YTS ОТРАБОТАЛО, и пробуем запустить плеер
 ytsReady = true;
 initWebtorIfReady();
 })
 .catch(error => {
     showError();
 });
-} 
 
 function displayMovie(movie, cast, genres, description, rating) {
     let movieHtml = `

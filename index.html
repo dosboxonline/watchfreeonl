@@ -692,12 +692,6 @@ addMetaTag("og:url", movieUrl, true);
 addMetaTag("og:type", "video.movie", true);
 addMetaTag("og:site_name", "WatchFree.Onl 🎦 Watch Free Movies Online in HD", true);
 
-addMetaTag("twitter:card", "summary");
-addMetaTag("twitter:title", movieTitle);
-addMetaTag("twitter:description", movieDescription);
-addMetaTag("twitter:image", movieImage);
-addMetaTag("twitter:url", movieUrl);
-
 if (bestTorrent && bestTorrent.hash) {
     const hash = bestTorrent.hash.toLowerCase();
     console.log("Torrent hash:", hash);
@@ -707,10 +701,14 @@ if (bestTorrent && bestTorrent.hash) {
 } else {
     showError();
 }
-})
-.catch(error => {
-    showError();
-});
+            } else {
+                showError();
+            }
+        })
+        .catch(error => {
+            showError();
+        });
+} 
 
 function displayMovie(movie, cast, genres, description, rating) {
     let movieHtml = `

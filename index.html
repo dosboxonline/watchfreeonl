@@ -526,17 +526,24 @@ const torrentsAll = Array.isArray(movie.torrents) ? movie.torrents : [];
 let filtered = torrentsAll.filter(t =>
   t &&
   typeof t.hash === "string" &&
-  (t.seeds || 0) > 0 &&
-  !/2160|4k|3d/i.test(String(t.quality || ""))
+  (t.video_codec || "").toLowerCase() === "x264" &&
+  !/2160p|3d/i.test(String(t.quality || ""))
 );
 
 let bestTorrent = null;
 
-let torrents1080 = filtered.filter(t => /1080p/i.test(t.quality));
-if (torrents1080.length > 0) {
-  bestTorrent = torrents1080.sort((a, b) => (b.seeds || 0) - (a.seeds || 0))[0];
-} else if (filtered.length > 0) {
-  bestTorrent = filtered.sort((a, b) => (b.seeds || 0) - (a.seeds || 0))[0];
+if (filtered.length > 0) {
+  bestTorrent = filtered.sort((a, b) => {
+    const scoreA = (a.seeds || 0) + (a.peers || 0);
+    const scoreB = (b.seeds || 0) + (b.peers || 0);
+
+    if (scoreA !== scoreB) {
+      return scoreB - scoreA;
+    }
+	
+    const rank = q => (/1080p/i.test(q) ? 1 : /720p/i.test(q) ? 2 : /480p/i.test(q) ? 3 : 4);
+    return rank(a.quality) - rank(b.quality);
+  })[0];
 }
 
 console.log("bestTorrent:", bestTorrent);

@@ -707,14 +707,10 @@ if (bestTorrent && bestTorrent.hash) {
 } else {
     showError();
 }
-            } else {
-                showError();
-            }
-        })
-        .catch(error => {
-            showError();
-        });
-}
+})
+.catch(error => {
+    showError();
+});
 
 function displayMovie(movie, cast, genres, description, rating) {
     let movieHtml = `
@@ -725,6 +721,7 @@ function displayMovie(movie, cast, genres, description, rating) {
     if (genres) {
         movieHtml += `<p><strong>Genre:</strong> ${genres}</p>`;
     }
+
 
     if (cast) {
         movieHtml += `<p><strong>Top Cast:</strong><br>${cast}</p>`;

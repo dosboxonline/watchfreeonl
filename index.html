@@ -499,7 +499,14 @@ function fetchMovieByTitle(title) {
         });
 }
 
+let ytsReady = false;
+let pendingMagnet = null;
+let pendingPoster = null;
 
+function initWebtorIfReady() {
+    if (!ytsReady || !pendingMagnet) return;
+    loadWebtorPlayer(pendingMagnet, pendingPoster);
+}
 
 function loadMovieById(movieId) {
     
@@ -688,22 +695,30 @@ addMetaTag("og:url", movieUrl, true);
 addMetaTag("og:type", "video.movie", true);
 addMetaTag("og:site_name", "WatchFree.Onl 🎦 Watch Free Movies Online in HD", true);
 
-if (bestTorrent && bestTorrent.hash) {
-    const hash = bestTorrent.hash.toLowerCase();
-    console.log("Torrent hash:", hash);
+addMetaTag("twitter:card", "summary");
+addMetaTag("twitter:title", movieTitle);
+addMetaTag("twitter:description", movieDescription);
+addMetaTag("twitter:image", movieImage);
+addMetaTag("twitter:url", movieUrl);
 
-    const magnetLink = `magnet:?xt=urn:btih:${hash}`;
-    loadWebtorPlayer(magnetLink, screenshot);
+// --- строго после успешного ЗАВЕРШЕНИЯ запроса к YTS ---
+// готовим данные для плеера, но НЕ запускаем его раньше времени
+if (bestTorrent && bestTorrent.hash) {
+    const hash = String(bestTorrent.hash).toLowerCase().trim();
+    pendingMagnet = `magnet:?xt=urn:btih:${hash}`;
+    pendingPoster = screenshot || null;
 } else {
     showError();
+    return; // выходим, плеер не трогаем
 }
-            } else {
-                showError();
-            }
-        })
-        .catch(error => {
-            showError();
-        });
+
+// помечаем, что API YTS ОТРАБОТАЛО, и пробуем запустить плеер
+ytsReady = true;
+initWebtorIfReady();
+})
+.catch(error => {
+    showError();
+});
 } 
 
 function displayMovie(movie, cast, genres, description, rating) {

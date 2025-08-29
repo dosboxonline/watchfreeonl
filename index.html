@@ -24,6 +24,14 @@ body {
 	min-height: 100vh;
 }
 
+.twitter-button {
+  position: fixed;
+  width: 6ch;
+  left: 1ch;
+  bottom: 1ch;
+  display: none;
+  z-index: 2000;
+}
 
 h1 {
     font-size: 28px;
@@ -324,7 +332,16 @@ body.single-movie #search-container {
 
 </style>
 
-	
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const btn = document.getElementById("twitter-button");
+  if (window.location.pathname === "/" || window.location.pathname === "/index.html") {
+    btn.style.display = "block";
+  } else {
+    btn.remove();
+  }
+});
+</script>	
 	
     <script>
 let currentPage = 2;
@@ -992,6 +1009,9 @@ window.addEventListener("scroll", () => {
 </head>
 <body>
     <div id="content"></div>
+	<a id="twitter-button" class="twitter-button" rel="nofollow" target="_blank" href="https://x.com/WatchFreeOnl">
+  <img src="/twitter.svg" alt="Follow us on X (Twitter)" title="Follow us on X (Twitter)">
+</a>
 <script defer src="/tonad.js"></script>
 </body>
 </html>

@@ -707,8 +707,8 @@ addMetaTag("twitter:url", movieUrl);
 
 
 
-if (bestTorrent) {
-    setTimeout(() => loadWebtorPlayer(bestTorrent, screenshot), 100);
+if (torrentFileUrl) {
+    setTimeout(() => loadWebtorPlayer(torrentFileUrl, screenshot), 100);
 }
             } else {
                 
@@ -804,27 +804,30 @@ function goBack() {
     window.location.href = "/";
 }
 
-function loadWebtorPlayer(bestTorrent, screenshot) {
+function loadWebtorPlayer(torrentFileUrl, screenshot) {
     let playerContainer = document.getElementById("player-container");
     if (!playerContainer) return;
 
     let containerWidth = playerContainer.clientWidth || window.innerWidth;
-    let torrentUrl = bestTorrent.url; // .torrent
-    let torrentMagnet = `magnet:?xt=urn:btih:${bestTorrent.hash}`; // fallback
 
-    function initPlayer(source, playerHeight) {
+    let img = new Image();
+    img.src = screenshot;
+
+    img.onload = function () {
+        let aspectRatio = img.naturalWidth / img.naturalHeight;
+        let playerHeight = Math.round(containerWidth / aspectRatio);
+
         playerContainer.style.height = playerHeight + "px";
 
         let player = document.createElement("div");
         player.id = "webtor-player";
-        playerContainer.innerHTML = "";
         playerContainer.appendChild(player);
 
         window.webtor = window.webtor || [];
         window.webtor.push({
             id: "webtor-player",
-            torrentUrl: source,
-            type: source.startsWith("magnet:") ? "magnet" : "application/x-bittorrent",
+            torrentUrl: torrentFileUrl,
+            type: "application/x-bittorrent",
             width: "100%",
             height: playerHeight + "px",
             poster: screenshot,
@@ -834,37 +837,33 @@ function loadWebtorPlayer(bestTorrent, screenshot) {
                 subtitles: false,
                 embed: false
             },
-            on: {
-                ready: function () {
-                    console.log("✅ Webtor готов, источник:", source);
-                },
-                error: function (e) {
-                    console.error("❌ Ошибка Webtor:", e);
-                    if (source === torrentUrl) {
-                        console.log("➡️ Пробуем fallback на hash...");
-                        initPlayer(torrentMagnet, playerHeight);
-                    }
-                }
-            }
         });
-    }
-
-    // Сначала пробуем определить высоту по картинке
-    let img = new Image();
-    img.src = screenshot;
-
-    img.onload = function () {
-        let aspectRatio = img.naturalWidth / img.naturalHeight;
-        let playerHeight = Math.round(containerWidth / aspectRatio);
-        initPlayer(torrentUrl, playerHeight);
     };
 
     img.onerror = function () {
         let playerHeight = Math.round(containerWidth / (16 / 9));
-        initPlayer(torrentUrl, playerHeight);
+        playerContainer.style.height = playerHeight + "px";
+
+        let player = document.createElement("div");
+        player.id = "webtor-player";
+        playerContainer.appendChild(player);
+
+        window.webtor = window.webtor || [];
+        window.webtor.push({
+            id: "webtor-player",
+            torrentUrl: torrentFileUrl,
+            type: "application/x-bittorrent",
+            width: "100%",
+            height: playerHeight + "px",
+            header: false,
+            controls: true,
+            features: {
+                subtitles: false,
+                embed: false
+            },
+        });
     };
 }
-
 
 function adjustPlayerHeight() {
     let screenshot = document.getElementById("screenshot-temp");

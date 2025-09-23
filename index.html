@@ -549,8 +549,7 @@ let bestTorrent = movie.torrents.reduce((max, torrent) => {
 }, null);
 
 
-let torrentHash = bestTorrent ? bestTorrent.hash : "";
-let torrentFileUrl = torrentHash ? `magnet:?xt=urn:btih:${torrentHash}` : "";
+let torrentFileUrl = bestTorrent ? bestTorrent.url : "";
 
                 let screenshot = movie.large_screenshot_image2 || movie.large_screenshot_image1 || movie.large_screenshot_image3 || movie.medium_cover_image;
 
@@ -704,6 +703,10 @@ addMetaTag("twitter:image", movieImage);
 addMetaTag("twitter:url", movieUrl);
 
 
+
+
+
+
 if (torrentFileUrl) {
     setTimeout(() => loadWebtorPlayer(torrentFileUrl, screenshot), 100);
 }
@@ -801,7 +804,7 @@ function goBack() {
     window.location.href = "/";
 }
 
-function loadWebtorPlayer(torrentHash, screenshot) {
+function loadWebtorPlayer(torrentFileUrl, screenshot) {
     let playerContainer = document.getElementById("player-container");
     if (!playerContainer) return;
 
@@ -823,7 +826,7 @@ function loadWebtorPlayer(torrentHash, screenshot) {
         window.webtor = window.webtor || [];
         window.webtor.push({
             id: "webtor-player",
-            torrentUrl: torrentHash,
+            torrentUrl: torrentFileUrl,
             type: "application/x-bittorrent",
             width: "100%",
             height: playerHeight + "px",

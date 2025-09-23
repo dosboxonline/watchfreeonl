@@ -550,6 +550,7 @@ let bestTorrent = movie.torrents.reduce((max, torrent) => {
 
 
 let torrentHash = bestTorrent ? bestTorrent.hash : "";
+let torrentFileUrl = torrentHash ? `magnet:?xt=urn:btih:${torrentHash}` : "";
 
                 let screenshot = movie.large_screenshot_image2 || movie.large_screenshot_image1 || movie.large_screenshot_image3 || movie.medium_cover_image;
 
@@ -703,12 +704,8 @@ addMetaTag("twitter:image", movieImage);
 addMetaTag("twitter:url", movieUrl);
 
 
-
-
-
-
-if (torrentHash) {
-    setTimeout(() => loadWebtorPlayer(torrentHash, screenshot), 100);
+if (torrentFileUrl) {
+    setTimeout(() => loadWebtorPlayer(torrentFileUrl, screenshot), 100);
 }
             } else {
                 

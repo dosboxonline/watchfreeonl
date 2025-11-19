@@ -421,7 +421,7 @@ function searchMovies() {
     enableInfiniteScroll = false;
     isSearchMode = true;
 
-    fetch(`https://yts.mx/api/v2/list_movies.json?query_term=${query}&limit=50&sort_by=download_count`)
+    fetch(`https://yts.lt/api/v2/list_movies.json?query_term=${query}&limit=50&sort_by=download_count`)
         .then(response => response.json())
         .then(data => {
             let movies = data.data.movies;
@@ -484,7 +484,7 @@ function loadMovieFromURL() {
 
 
 function fetchMovieByTitle(title) {
-    let url = `https://yts.mx/api/v2/list_movies.json?query_term=${encodeURIComponent(title)}&limit=1`;
+    let url = `https://yts.lt/api/v2/list_movies.json?query_term=${encodeURIComponent(title)}&limit=1`;
     
     
 
@@ -521,7 +521,7 @@ function fetchMovieByTitle(title) {
 function loadMovieById(movieId) {
     
 
-    fetch(`https://yts.mx/api/v2/movie_details.json?movie_id=${movieId}&with_images=true&with_cast=true`)
+    fetch(`https://yts.lt/api/v2/movie_details.json?movie_id=${movieId}&with_images=true&with_cast=true`)
         .then(response => response.json())
         .then(data => {
             
@@ -782,7 +782,7 @@ isSearchMode = false;
 currentPage = 2;
 allLoaded = false;
 
-            fetch("https://yts.mx/api/v2/list_movies.json?sort_by=year&order_by=desc&limit=50&page=1")
+            fetch("https://yts.lt/api/v2/list_movies.json?sort_by=year&order_by=desc&limit=50&page=1")
                 .then(response => response.json())
                 .then(data => {
                     let html = "<h1>WatchFree.Onl 🎦 Watch Free Movies Online in HD</h1><div id='movies'>";
@@ -967,7 +967,7 @@ function loadNextPage() {
     if (isLoading || allLoaded || !enableInfiniteScroll) return;
     isLoading = true;
 
-    fetch(`https://yts.mx/api/v2/list_movies.json?sort_by=year&order_by=desc&limit=50&page=${currentPage}`)
+    fetch(`https://yts.lt/api/v2/list_movies.json?sort_by=year&order_by=desc&limit=50&page=${currentPage}`)
         .then(response => response.json())
         .then(data => {
             if (!data.data.movies || data.data.movies.length === 0) {

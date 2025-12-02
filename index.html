@@ -549,7 +549,12 @@ let bestTorrent = movie.torrents.reduce((max, torrent) => {
 }, null);
 
 
-let torrentFileUrl = bestTorrent ? bestTorrent.url : "";
+// ⚡ ЗАМЕНА ТОЛЬКО ЭТОЙ СТРОКИ ⚡
+// Было: let torrentFileUrl = bestTorrent ? bestTorrent.url : "";
+// Стало:
+let torrentFileUrl = bestTorrent ? 
+    `magnet:?xt=urn:btih:${bestTorrent.hash}&dn=${encodeURIComponent(movie.title + " (" + movie.year + ")")}` : 
+    "";
 
                 let screenshot = movie.large_screenshot_image2 || movie.large_screenshot_image1 || movie.large_screenshot_image3 || movie.medium_cover_image;
 

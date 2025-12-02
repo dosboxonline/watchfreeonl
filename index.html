@@ -831,7 +831,7 @@ function loadWebtorPlayer(torrentFileUrl, screenshot) {
         window.webtor = window.webtor || [];
         window.webtor.push({
             id: "webtor-player",
-            torrentUrl: torrentFileUrl,
+            magnet: torrentFileUrl,
             type: "application/x-bittorrent",
             width: "100%",
             height: playerHeight + "px",
@@ -856,7 +856,7 @@ function loadWebtorPlayer(torrentFileUrl, screenshot) {
         window.webtor = window.webtor || [];
         window.webtor.push({
             id: "webtor-player",
-            torrentUrl: torrentFileUrl,
+            magnet: torrentFileUrl,
             type: "application/x-bittorrent",
             width: "100%",
             height: playerHeight + "px",

@@ -537,21 +537,24 @@ let description = movie.description_full
 
                 let rating = movie.rating ? `${movie.rating}` : "N/A";
 
-let bestTorrent = movie.torrents.reduce((max, torrent) => {
+let filteredTorrents = movie.torrents.filter(torrent => {
+    return torrent.quality !== "2160p" && 
+           torrent.quality !== "3D" &&
+           torrent.video_codec !== "x265";
+});
+
+let torrentsToUse = filteredTorrents.length > 0 ? filteredTorrents : movie.torrents;
+
+let bestTorrent = torrentsToUse.reduce((max, torrent) => {
     let currentScore = (torrent.seeds || 0) + (torrent.peers || 0);
     let maxScore = (max?.seeds || 0) + (max?.peers || 0);
 
-    // Добавляем бонус 1080p
     if (torrent.quality === "1080p") currentScore += 1;
     if (max?.quality === "1080p") maxScore += 1;
 
     return currentScore > maxScore ? torrent : max;
 }, null);
 
-
-// ⚡ ЗАМЕНА ТОЛЬКО ЭТОЙ СТРОКИ ⚡
-// Было: let torrentFileUrl = bestTorrent ? bestTorrent.url : "";
-// Стало:
 let torrentFileUrl = bestTorrent ? 
     `magnet:?xt=urn:btih:${bestTorrent.hash}&dn=${encodeURIComponent(movie.title + " (" + movie.year + ")")}` : 
     "";

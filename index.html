@@ -537,32 +537,40 @@ let description = movie.description_full
 
                 let rating = movie.rating ? `${movie.rating}` : "N/A";
 
-let filteredTorrents = movie.torrents.filter(torrent => {
+let goodTorrents = movie.torrents.filter(torrent => {
     return torrent.quality !== "2160p" && 
            torrent.quality !== "3D" &&
            torrent.video_codec !== "x265";
 });
 
-let bestTorrent = filteredTorrents.reduce((max, torrent) => {
-    let currentScore = (torrent.seeds || 0) + (torrent.peers || 0);
-    let maxScore = (max?.seeds || 0) + (max?.peers || 0);
+let torrents1080p = goodTorrents.filter(t => t.quality === "1080p");
 
-    if (torrent.quality === "1080p") currentScore += 1;
-    if (max?.quality === "1080p") maxScore += 1;
+let bestTorrent;
 
-    return currentScore > maxScore ? torrent : max;
-}, null);
-
-if (!bestTorrent && movie.torrents.length > 0) {
-    bestTorrent = movie.torrents.reduce((max, torrent) => {
-        let currentScore = (torrent.seeds || 0) + (torrent.peers || 0);
-        let maxScore = (max?.seeds || 0) + (max?.peers || 0);
-
-        if (torrent.quality === "1080p") currentScore += 1;
-        if (max?.quality === "1080p") maxScore += 1;
-
-        return currentScore > maxScore ? torrent : max;
-    }, null);
+if (torrents1080p.length > 0) {
+    bestTorrent = torrents1080p[0];
+    for (let i = 1; i < torrents1080p.length; i++) {
+        let current = torrents1080p[i];
+        let bestScore = (bestTorrent.seeds || 0) + (bestTorrent.peers || 0);
+        let currentScore = (current.seeds || 0) + (current.peers || 0);
+        if (currentScore > bestScore) {
+            bestTorrent = current;
+        }
+    }
+} 
+else if (goodTorrents.length > 0) {
+    bestTorrent = goodTorrents[0];
+    for (let i = 1; i < goodTorrents.length; i++) {
+        let current = goodTorrents[i];
+        let bestScore = (bestTorrent.seeds || 0) + (bestTorrent.peers || 0);
+        let currentScore = (current.seeds || 0) + (current.peers || 0);
+        if (currentScore > bestScore) {
+            bestTorrent = current;
+        }
+    }
+} 
+else if (movie.torrents.length > 0) {
+    bestTorrent = movie.torrents[0];
 }
 
 let torrentFileUrl = bestTorrent ? 
